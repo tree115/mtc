@@ -30,7 +30,7 @@ z = log_meta['Z'].values
 z[z <= 0] = 1e-6
 
 print("Đang tính khoảng cách quang độ...")
-dist_pc = cosmo.luminosity_distance(z).to(u.pc).value
+dist_pc = cosmo.luminosity_distance(z).to(u.pc).value # TDE là sự kiện cực sáng, cần so độ sáng tuyệt đối
 dist_map = dict(zip(log_meta['object_id'], dist_pc))
 print("Hoàn tất tính khoảng cách!")
 
@@ -198,7 +198,7 @@ for i in tqdm(range(1, NUM_SPLITS + 1), desc="Tiến độ tổng thể"):
         ebv = object_log['EBV']
         A_v = R_V * ebv
         flux_corrected_list = []
-        for index, row in object_lc.iterrows():
+        for index, row in object_lc.iterrows(): #Hiệu chỉnh extinction
             A_lambda = extinction.fitzpatrick99(np.array([EFF_WAVELENGTHS[row['Filter']]]), A_v, R_V)[0]
             flux_corrected_list.append(row['flux'] * 10**(0.4 * A_lambda))
         object_lc['flux_corrected'] = flux_corrected_list
