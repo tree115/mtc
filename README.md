@@ -1,10 +1,35 @@
+#  Mallorn Astronomical Classification Challenge – Bài Tập Lớn Machine Learning
+
+##  Giới thiệu
+Đây là dự án bài tập lớn môn **Machine Learning** thực hiện tham gia cuộc thi [Mallorn Astronomical Classification Challenge](https://www.kaggle.com/competitions/mallorn-astronomical-classification-challenge/data) trên Kaggle.  
+Mục tiêu của dự án là phát triển mô hình học máy để phân loại các sự kiện thiên văn, đặc biệt là **Tidal Disruption Events (TDEs)**, từ dữ liệu **lightcurve** thu thập bởi LSST.
+
+Nhóm triển khai đầy đủ các bước:
+- Tiền xử lý dữ liệu và xử lý missing values.
+- Trích xuất đặc trưng quan trọng từ lightcurve.
+- Huấn luyện mô hình LightGBM, thử các chiến lược feature selection và ensemble.
+- Tối ưu ngưỡng phân loại (threshold) dựa trên F1-score và Precision–Recall Curve.
+- Đánh giá hiệu năng bằng các metrics: F1-score, Precision, Recall, ROC AUC, AP.
+- Tạo báo cáo OOF và trực quan hóa các kết quả (feature importance, confusion matrix, ROC/PR curves).
+---
+
+## 👥 Nhóm thực hiện
+
+| Họ và tên | Mã sinh viên |
+|-----------|--------------|
+| Vũ Thị Kim Chi | 23021489 |
+| Nguyễn Đoàn Hoài Thương | 23021733 |
+| Nguyễn Thị Thanh Tuyền | 23021717 |
+---
+
+
 # MTC - Pipeline Phân loại TDE
 
 Repo này chứa pipeline máy học để phân loại **Tidal Disruption Events (TDEs)** từ dữ liệu lightcurve thiên văn, sử dụng kỹ thuật **feature engineering** nâng cao và mô hình **LightGBM**.
 
 ---
 
-## 🗂 Cấu trúc thư mục
+## Cấu trúc thư mục
 
 - `config.py` : File cấu hình cho đường dẫn, features và thư mục lưu model.
 - `data_loader.py` : Load dữ liệu lightcurve và log thô.
@@ -18,7 +43,7 @@ Repo này chứa pipeline máy học để phân loại **Tidal Disruption Event
 
 ---
 
-## ⚡ Tính năng
+## Tính năng
 
 - Pipeline LightGBM đầy đủ với **cross-validation**, **feature selection**, và **ensemble**.
 - Tối ưu cho **dữ liệu mất cân bằng**, tự động điều chỉnh ngưỡng dựa trên **F1-score** và **Precision-Recall curve**.
@@ -28,16 +53,3 @@ Repo này chứa pipeline máy học để phân loại **Tidal Disruption Event
 
 ---
 
-## 📦 Yêu cầu
-
-- Python 3.9+
-- pandas, numpy
-- scikit-learn
-- lightgbm
-- matplotlib, seaborn
-- joblib
-
-Cài đặt dependencies:
-
-```bash
-pip install -r requirements.txt
