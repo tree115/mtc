@@ -30,9 +30,9 @@ Repo này chứa pipeline máy học để phân loại **Tidal Disruption Event
 ---
 
 ## Cấu trúc thư mục
-
+```
 TDE-Mallorn-Detection/
-├── README.md                          # Tài liệu chính của dự án
+├── README.md                         
 ├── data/                             # Thư mục dữ liệu
 │   ├── raw/                          # Dữ liệu gốc từ Kaggle (giữ nguyên)
 │   │   ├── split_01/                 # Các split chính thức của MALLORN
@@ -78,6 +78,7 @@ TDE-Mallorn-Detection/
 │   ├── feature_importance/           # Độ quan trọng đặc trưng
 │   └── optuna_studies/               # Kết quả Optuna
 
+```
 ---
 
 ## Tính năng
