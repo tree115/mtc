@@ -85,8 +85,6 @@ TDE-Mallorn-Detection/
 
 ## Cài đặt
 
-Cách 1 : Chạy local
-
 Pipeline có thể chạy **trên Local hoặc Google Colab**.
 
 ---
