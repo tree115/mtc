@@ -118,7 +118,7 @@ python src/models/predict.py
 
 **Bước 1:** Clone repo vào Colab
 ```bash
-!git clone https://github.com/<username>/TDE-Mallorn-Detection.git
+!git clone https://github.com/tree115/mtc.git
 %cd TDE-Mallorn-Detection
 !pip install -r requirements.txt
 ```
