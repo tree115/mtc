@@ -31,15 +31,52 @@ Repo này chứa pipeline máy học để phân loại **Tidal Disruption Event
 
 ## Cấu trúc thư mục
 
-- `config.py` : File cấu hình cho đường dẫn, features và thư mục lưu model.
-- `data_loader.py` : Load dữ liệu lightcurve và log thô.
-- `dataset.py` : Wrapper dataset và các hàm tiền xử lý dữ liệu.
-- `feature_engineer.py` : Các hàm trích xuất đặc trưng tùy chỉnh.
-- `gp_features.py` : Trích xuất đặc trưng từ Gaussian Process cho lightcurve.
-- `model.py` : Huấn luyện model, cross-validation, ensemble với LightGBM.
-- `preprocessor.py` : Tiền xử lý dữ liệu, xử lý NaN, mã hóa categorical.
-- `train.py` : Script huấn luyện với nhiều chiến lược và tối ưu ngưỡng phân loại.
-- `predict.py` : Script dự đoán cho dữ liệu mới.
+TDE-Mallorn-Detection/
+├── README.md                          # Tài liệu chính của dự án
+├── data/                             # Thư mục dữ liệu
+│   ├── raw/                          # Dữ liệu gốc từ Kaggle (giữ nguyên)
+│   │   ├── split_01/                 # Các split chính thức của MALLORN
+│   │   ├── split_02/
+│   │   └── ...
+│   └── processed/                    # Dữ liệu sau khi preprocessing & trích xuất đặc trưng
+│
+├── src/                              # Source code chính
+│   ├── __init__.py                   # Đánh dấu src là một Python package
+│   ├── config.py                     # Cấu hình chung & đường dẫn
+│   │
+│   ├── data/                         # Xử lý dữ liệu
+│   │   ├── __init__.py
+│   │   ├── data_loader.py            # Load dữ liệu raw/processed
+│   │   ├── dataset.py                # Dataset dùng cho train/inference
+│   │   └── preprocessor.py           # Preprocessing (extinction, cleaning, vật lý)
+│   │
+│   ├── features/                     # Trích xuất đặc trưng
+│   │   ├── __init__.py
+│   │   ├── feature_engineer.py       # Trích xuất đặc trưng light curve
+│   │   ├── gp_features.py            # Đặc trưng từ Gaussian Process
+│   │   └── utils.py                  # Hàm hỗ trợ feature engineering
+│   │
+│   ├── models/                       # Huấn luyện & dự đoán
+│   │   ├── __init__.py
+│   │   ├── model.py                  # Định nghĩa model (LightGBM)
+│   │   ├── train.py                  # Train model cơ bản
+│   │   ├── train_final.py            # Train cuối với Optuna
+│   │   ├── predict.py                # Dự đoán & tạo file submission
+│   │   └── optuna_tune.py            # Tối ưu hyperparameter
+│   │
+│   └── visualization/                # Vẽ hình & trực quan hóa
+│       ├── __init__.py
+│       └── shap_analysis.py          # Vẽ feature importance
+│
+├── notebooks/                        # Notebook phân tích
+│   ├── run.ipynb                     # Chạy toàn bộ pipeline
+│
+├── outputs/                          # Kết quả sinh ra (không commit)
+│   ├── models/                       # Model đã train
+│   ├── submissions/                  # File nộp Kaggle
+│   ├── logs/                         # Log huấn luyện
+│   ├── feature_importance/           # Độ quan trọng đặc trưng
+│   └── optuna_studies/               # Kết quả Optuna
 
 ---
 
