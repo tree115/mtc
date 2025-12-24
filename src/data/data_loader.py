@@ -35,10 +35,10 @@ class DataLoader:
         file_path = TRAIN_LOG if mode == "train" else TEST_LOG
 
         if not file_path.exists():
-            raise FileNotFoundError(f"❌ File not found: {file_path}")
+            raise FileNotFoundError(f"File not found: {file_path}")
 
         df = pd.read_csv(file_path)
-        print(f"✅ Loaded {mode} metadata: {len(df)} objects")
+        print(f"Loaded {mode} metadata: {len(df)} objects")
 
         return df
 
@@ -58,7 +58,7 @@ class DataLoader:
                 splits.append(sp)
 
         if not splits:
-            raise RuntimeError("❌ No split directories found")
+            raise RuntimeError("No split directories found")
 
         return splits
 
@@ -70,7 +70,7 @@ class DataLoader:
         split_path = self.base_path / split / f"{mode}_full_lightcurves.csv"
 
         if not split_path.exists():
-            print(f"⚠️ Missing file: {split_path}")
+            print(f"Missing file: {split_path}")
             return pd.DataFrame()
 
         # --------------------------------------------------
@@ -79,7 +79,7 @@ class DataLoader:
         try:
             lc = pd.read_csv(split_path)
         except Exception as e:
-            print(f"❌ Failed to load {split_path}: {e}")
+            print(f"Failed to load {split_path}: {e}")
             return pd.DataFrame()
 
         # Standardize column names
@@ -90,7 +90,7 @@ class DataLoader:
         })
 
         if "object_id" not in lc.columns:
-            raise ValueError(f"❌ object_id missing in {split_path}")
+            raise ValueError(f"object_id missing in {split_path}")
 
         # --------------------------------------------------
         # Load metadata and filter by split
@@ -159,7 +159,7 @@ class DataLoader:
         """
         Load ALL splits together (legacy – slow)
         """
-        print(f"📥 Loading ALL data ({mode}) – SLOW PATH")
+        print(f"Loading ALL data ({mode}) – SLOW PATH")
 
         meta = self.load_metadata(mode)
 
@@ -169,7 +169,7 @@ class DataLoader:
         lc = self.load_lightcurves(meta["object_id"].tolist(), mode)
 
         if lc.empty:
-            raise RuntimeError("❌ No lightcurves loaded")
+            raise RuntimeError("No lightcurves loaded")
 
         data = lc.merge(meta, on="object_id", how="left")
         return data

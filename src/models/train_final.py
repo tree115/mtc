@@ -23,14 +23,14 @@ from model import (
 # =====================================================
 OPTUNA_JSON = Path("outputs/optuna_best_params.json")
 if not OPTUNA_JSON.exists():
-    raise FileNotFoundError("❌ optuna_best_params.json not found")
+    raise FileNotFoundError(" optuna_best_params.json not found")
 
 with open(OPTUNA_JSON, "r") as f:
     optuna_result = json.load(f)
 
 BEST_PARAMS = optuna_result["best_params"]
 
-print("\n🏆 USING OPTUNA BEST PARAMS")
+print("\n USING OPTUNA BEST PARAMS")
 for k, v in BEST_PARAMS.items():
     print(f"  {k}: {v}")
 
@@ -64,16 +64,16 @@ LGBMClassifier.__init__ = _patched_init
 # =====================================================
 def main():
     print("=" * 80)
-    print("🚀 TDE MALLORN – FINAL TRAINING (OPTUNA)")
+    print(" TDE MALLORN FINAL TRAINING (OPTUNA)")
     print("=" * 80)
 
     # -------------------------------------------------
     # LOAD DATA
     # -------------------------------------------------
     if not TRAIN_FEATURES.exists():
-        raise FileNotFoundError(f"❌ File not found: {TRAIN_FEATURES}")
+        raise FileNotFoundError(f" File not found: {TRAIN_FEATURES}")
 
-    print("📥 Loading train features...")
+    print(" Loading train features...")
     df = pd.read_csv(TRAIN_FEATURES)
 
     # -------------------------------------------------
@@ -82,9 +82,9 @@ def main():
     df["target"] = df["target"].fillna(0).astype(int)
     y = df["target"]
 
-    print(f"📊 Total samples : {len(df)}")
-    print(f"🎯 TDE count     : {y.sum()}")
-    print(f"🎯 TDE ratio     : {y.mean():.4f}")
+    print(f" Total samples : {len(df)}")
+    print(f" TDE count     : {y.sum()}")
+    print(f" TDE ratio     : {y.mean():.4f}")
 
     drop_cols = [
         "object_id", "target", "split", "SpecType",
@@ -96,16 +96,16 @@ def main():
     # categorical → factorize (GIỐNG TRAIN CŨ)
     cat_cols = X_full.select_dtypes(include=["object", "category"]).columns
     if len(cat_cols) > 0:
-        print(f"🔄 Converting categorical: {cat_cols.tolist()}")
+        print(f" Converting categorical: {cat_cols.tolist()}")
         for col in cat_cols:
             X_full[col] = pd.factorize(X_full[col])[0]
 
     # fill NaN
     if X_full.isnull().any().any():
-        print("⚠️ NaNs detected – filling with column median")
+        print("NaNs detected – filling with column median")
         X_full = X_full.fillna(X_full.median())
 
-    print(f"🧠 Initial features : {X_full.shape[1]}")
+    print(f" Initial features : {X_full.shape[1]}")
 
     # -------------------------------------------------
     # STRATEGY 1: ALL FEATURES
@@ -166,7 +166,7 @@ def main():
     # COMPARE STRATEGIES
     # -------------------------------------------------
     print("\n" + "="*80)
-    print("📊 STRATEGY COMPARISON")
+    print(" STRATEGY COMPARISON")
     print("="*80)
 
     strategies = {
@@ -190,7 +190,7 @@ def main():
             best_strategy = name
             best_result = result
 
-    print(f"\n🏆 BEST STRATEGY: {best_strategy} (F1: {best_f1:.4f})")
+    print(f"\n BEST STRATEGY: {best_strategy} (F1: {best_f1:.4f})")
 
     # -------------------------------------------------
     # SAVE MODEL (SAME FORMAT AS OLD)
@@ -221,8 +221,8 @@ def main():
         model_path,
     )
 
-    print(f"\n💾 FINAL MODEL SAVED → {model_path}")
-    print(f"🎯 FINAL OOF F1 → {best_result['oof_f1']:.4f}")
+    print(f"\n FINAL MODEL SAVED → {model_path}")
+    print(f" FINAL OOF F1 → {best_result['oof_f1']:.4f}")
 
     return best_result
 

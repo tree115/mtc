@@ -52,7 +52,7 @@ def load_validation_data_for_threshold(model_data):
         if not TRAIN_FEATURES.exists():
             return None, None
         
-        print("📊 Loading validation data for threshold optimization...")
+        print("Loading validation data for threshold optimization...")
         df_val = pd.read_csv(TRAIN_FEATURES)
         
         # Get features used by model
@@ -76,7 +76,7 @@ def load_validation_data_for_threshold(model_data):
             return prob_val, y_val
         
     except Exception as e:
-        print(f"⚠️  Could not load validation data: {e}")
+        print(f"  Could not load validation data: {e}")
     
     return None, None
 
@@ -85,7 +85,7 @@ def explore_thresholds(probabilities, model_threshold, y_true=None):
     """
     Explore multiple thresholds and show statistics
     """
-    print("\n🔍 EXPLORING THRESHOLDS")
+    print("\n EXPLORING THRESHOLDS")
     print("="*60)
     
     thresholds_to_try = [
@@ -129,7 +129,7 @@ def explore_thresholds(probabilities, model_threshold, y_true=None):
     # Create DataFrame for display
     df_results = pd.DataFrame(results)
     
-    print("\n📊 Threshold Analysis:")
+    print("\n Threshold Analysis:")
     print("-" * 80)
     
     if y_true is not None:
@@ -152,7 +152,7 @@ def explore_thresholds(probabilities, model_threshold, y_true=None):
     
     # Find threshold for target number of positives
     if args.target_positives:
-        print(f"\n🎯 Targeting ~{args.target_positives} positives:")
+        print(f"\n Targeting ~{args.target_positives} positives:")
         
         # Find threshold that gives closest to target
         df_results['diff'] = abs(df_results['positives'] - args.target_positives)
@@ -176,31 +176,31 @@ def auto_optimize_threshold(probabilities, y_true):
     Automatically find optimal threshold on validation data
     """
     if y_true is None:
-        print("❌ Cannot auto-optimize: No validation labels available")
+        print(" Cannot auto-optimize: No validation labels available")
         return None
     
-    print("\n🤖 AUTO-THRESHOLD OPTIMIZATION")
+    print("\n AUTO-THRESHOLD OPTIMIZATION")
     print("="*60)
     
     # Find optimal threshold
     optimal_threshold, optimal_f1 = find_optimal_threshold(y_true, probabilities)
     
-    print(f"✅ Optimal threshold: {optimal_threshold:.4f}")
+    print(f" Optimal threshold: {optimal_threshold:.4f}")
     print(f"   F1 score: {optimal_f1:.4f}")
     
     # Show comparison with model threshold
     pred_model = (probabilities >= model_threshold).astype(int)
     f1_model = f1_score(y_true, pred_model, zero_division=0)
     
-    print(f"\n📊 Comparison with model threshold ({model_threshold:.4f}):")
+    print(f"\n Comparison with model threshold ({model_threshold:.4f}):")
     print(f"   Model F1: {f1_model:.4f}")
     print(f"   Improvement: {optimal_f1 - f1_model:+.4f}")
     
     if optimal_f1 > f1_model:
-        print("✨ New threshold improves F1!")
+        print(" New threshold improves F1!")
         return optimal_threshold
     else:
-        print("📌 Keeping model threshold (better or equal)")
+        print(" Keeping model threshold (better or equal)")
         return model_threshold
 
 
@@ -209,7 +209,7 @@ def main():
     args = parse_args()
     
     print("=" * 80)
-    print("🚀 TDE MALLORN PREDICTION - THRESHOLD SELECTION")
+    print(" TDE MALLORN PREDICTION - THRESHOLD SELECTION")
     print("=" * 80)
     
     # -------------------------------------------------
@@ -219,7 +219,7 @@ def main():
         # Use specified model
         model_path = MODELS_DIR / args.model
         if not model_path.exists():
-            raise FileNotFoundError(f"❌ Model not found: {model_path}")
+            raise FileNotFoundError(f" Model not found: {model_path}")
     else:
         # Find best model
         model_files = list(MODELS_DIR.glob("tde_lgbm_best_*.pkl"))
@@ -228,13 +228,13 @@ def main():
             model_files = list(MODELS_DIR.glob("tde_lgbm_strong_*.pkl"))
         
         if not model_files:
-            raise FileNotFoundError("❌ No trained model found")
+            raise FileNotFoundError(" No trained model found")
         
         # Sort by creation time
         model_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
         model_path = model_files[0]
     
-    print(f"📥 Loading model: {model_path.name}")
+    print(f" Loading model: {model_path.name}")
     data = joblib.load(model_path)
     
     models = data["models"]
@@ -242,23 +242,23 @@ def main():
     model_threshold = data["threshold"]
     strategy = data.get("strategy", "unknown")
     
-    print(f"🧠 Strategy      : {strategy}")
-    print(f"📏 Features      : {len(feature_names)}")
-    print(f"🎯 Model threshold: {model_threshold:.4f}")
-    print(f"📈 OOF F1        : {data['oof_f1']:.4f}")
+    print(f" Strategy      : {strategy}")
+    print(f" Features      : {len(feature_names)}")
+    print(f" Model threshold: {model_threshold:.4f}")
+    print(f" OOF F1        : {data['oof_f1']:.4f}")
     
     # -------------------------------------------------
     # Load test data
     # -------------------------------------------------
     if not TEST_FEATURES.exists():
-        print("📦 Creating test_features.csv ...")
+        print(" Creating test_features.csv ...")
         test_df = create_test_dataset(save=True)
     else:
-        print("📦 Loading test_features.csv")
+        print(" Loading test_features.csv")
         test_df = pd.read_csv(TEST_FEATURES)
     
     if "object_id" not in test_df.columns:
-        raise ValueError("❌ object_id missing in test features")
+        raise ValueError(" object_id missing in test features")
     
     object_ids = test_df["object_id"].values
     
@@ -269,20 +269,20 @@ def main():
     extra_features = set(test_df.columns) - set(feature_names)
     
     if missing_features:
-        print(f"⚠️  Adding missing {len(missing_features)} features (set to 0)")
+        print(f"  Adding missing {len(missing_features)} features (set to 0)")
         for col in missing_features:
             test_df[col] = 0
     
     if extra_features:
-        print(f"⚠️  Removing {len(extra_features)} extra features not in training")
+        print(f"  Removing {len(extra_features)} extra features not in training")
     
     X_test = test_df[feature_names]
-    print(f"📊 Test samples  : {len(X_test)}")
+    print(f" Test samples  : {len(X_test)}")
     
     # -------------------------------------------------
     # Get predictions
     # -------------------------------------------------
-    print(f"\n🔮 Predicting with {args.method} aggregation...")
+    print(f"\n Predicting with {args.method} aggregation...")
     prob, _ = predict_with_calibration(
         models, X_test, threshold=0.5, method=args.method
     )
@@ -298,7 +298,7 @@ def main():
         if y_val is not None:
             final_threshold = auto_optimize_threshold(prob_val, y_val)
         else:
-            print("❌ Cannot auto-optimize: No validation data available")
+            print(" Cannot auto-optimize: No validation data available")
     
     elif args.explore_thresholds:
         # Explore multiple thresholds
@@ -307,10 +307,10 @@ def main():
         
         if target_threshold is not None and args.target_positives:
             final_threshold = target_threshold
-            print(f"\n✅ Using threshold for target positives: {final_threshold:.4f}")
+            print(f"\n Using threshold for target positives: {final_threshold:.4f}")
         else:
             # Ask user to choose
-            print("\n🎯 Choose threshold (or press Enter for model threshold):")
+            print("\n Choose threshold (or press Enter for model threshold):")
             try:
                 user_input = input(f"   Threshold [{model_threshold:.4f}]: ").strip()
                 if user_input:
@@ -318,24 +318,24 @@ def main():
                     if not 0 <= final_threshold <= 1:
                         raise ValueError("Threshold must be between 0 and 1")
             except ValueError as e:
-                print(f"⚠️  Invalid input: {e}, using model threshold")
+                print(f"  Invalid input: {e}, using model threshold")
                 final_threshold = model_threshold
             except KeyboardInterrupt:
-                print("\n⏹️  Using model threshold")
+                print("\n  Using model threshold")
                 final_threshold = model_threshold
     
     elif args.threshold is not None:
         # Use custom threshold from command line
         final_threshold = args.threshold
         if not 0 <= final_threshold <= 1:
-            print(f"⚠️  Threshold must be between 0 and 1, using {model_threshold:.4f}")
+            print(f"  Threshold must be between 0 and 1, using {model_threshold:.4f}")
             final_threshold = model_threshold
         else:
-            print(f"✅ Using custom threshold: {final_threshold:.4f}")
+            print(f" Using custom threshold: {final_threshold:.4f}")
     
     elif args.target_positives:
         # Find threshold for target number of positives
-        print(f"\n🎯 Finding threshold for ~{args.target_positives} positives...")
+        print(f"\n Finding threshold for ~{args.target_positives} positives...")
         
         # Binary search for threshold
         low, high = 0.0, 1.0
@@ -359,7 +359,7 @@ def main():
     # Apply final threshold
     pred = (prob >= final_threshold).astype(int)
     
-    print(f"\n✅ Final threshold: {final_threshold:.4f}")
+    print(f"\n Final threshold: {final_threshold:.4f}")
     print(f"   TDE predicted: {pred.sum():,} ({pred.mean():.2%})")
     
     # -------------------------------------------------
@@ -391,7 +391,7 @@ def main():
     # -------------------------------------------------
     # Detailed stats
     # -------------------------------------------------
-    print("\n📊 FINAL PREDICTION STATS")
+    print("\n FINAL PREDICTION STATS")
     print("-" * 60)
     print(f"   Total objects        : {len(pred):,}")
     print(f"   TDE predicted        : {pred.sum():,} ({pred.mean():.2%})")
@@ -402,7 +402,7 @@ def main():
     print(f"   Aggregation method   : {args.method}")
     
     # Probability distribution
-    print("\n📈 Probability distribution:")
+    print("\n Probability distribution:")
     bins = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     hist, bin_edges = np.histogram(prob, bins=bins)
     
@@ -413,8 +413,8 @@ def main():
         print(f"   {bins[i]:.1f}-{bins[i+1]:.1f}: {bar:<40} {hist[i]:,} ({pct:.1f}%) {threshold_indicator}")
     
     print("\n" + "=" * 80)
-    print("✅ PREDICTION COMPLETED")
-    print(f"📤 Submission saved: {sub_path}")
+    print(" PREDICTION COMPLETED")
+    print(f" Submission saved: {sub_path}")
     print("=" * 80)
     
     # Save prediction probabilities for analysis
@@ -425,7 +425,7 @@ def main():
         "predicted": pred,
         "threshold": final_threshold
     }).to_csv(prob_path, index=False)
-    print(f"💾 Probabilities saved: {prob_path}")
+    print(f" Probabilities saved: {prob_path}")
 
 
 if __name__ == "__main__":

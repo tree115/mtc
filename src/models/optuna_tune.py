@@ -37,7 +37,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 # -------------------------
 # LOAD DATA (IDENTICAL TO train.py)
 # -------------------------
-print("📥 Loading data (same as train.py)...")
+print(" Loading data (same as train.py)...")
 if not TRAIN_FEATURES.exists():
     raise FileNotFoundError(f"TRAIN_FEATURES not found: {TRAIN_FEATURES}")
 
@@ -59,13 +59,13 @@ for col in cat_cols:
 if X.isnull().any().any():
     X = X.fillna(X.median())
 
-print(f"🧠 Features: {X.shape[1]}")
-print(f"🎯 Positives: {y.sum()} / {len(y)}")
+print(f" Features: {X.shape[1]}")
+print(f" Positives: {y.sum()} / {len(y)}")
 
 n_pos = y.sum()
 n_neg = len(y) - n_pos
 imbalance_ratio = n_neg / max(1, n_pos)
-print(f"📊 Class balance: {n_pos} TDE vs {n_neg} Non-TDE (ratio: {imbalance_ratio:.1f}x)")
+print(f" Class balance: {n_pos} TDE vs {n_neg} Non-TDE (ratio: {imbalance_ratio:.1f}x)")
 
 # -------------------------
 # BASE PARAMS (IDENTICAL TO model.py)
@@ -148,7 +148,7 @@ def objective(trial: optuna.Trial):
             f1 = 0.0
 
     except Exception as e:
-        print("❌ Trial failed:", repr(e))
+        print(" Trial failed:", repr(e))
         f1 = 0.0
 
     finally:
@@ -172,7 +172,7 @@ if __name__ == "__main__":
         study_name="lgbm_f1_baseline_model",
     )
 
-    print("🚀 Starting Optuna tuning (SAFE, sklearn-compatible)...")
+    print("Starting Optuna tuning (SAFE, sklearn-compatible)...")
     study.optimize(
         objective,
         n_trials=N_TRIALS,
@@ -199,10 +199,10 @@ if __name__ == "__main__":
     with open(out_path, "w") as f:
         json.dump(out, f, indent=2)
 
-    print("\n🏆 BEST RESULT")
+    print("\n BEST RESULT")
     print("F1:", study.best_value)
     print("\nMerged best params:")
     for k, v in full_best.items():
         print(f"  {k}: {v}")
 
-    print(f"\n💾 Saved → {out_path}")
+    print(f"\n Saved → {out_path}")

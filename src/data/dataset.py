@@ -35,7 +35,7 @@ class TdeDataset:
     # ======================================================
     def _build_features_by_split(self, mode="train"):
         print("=" * 80)
-        print(f"⚙️  FEATURE ENGINEERING BY SPLIT ({mode.upper()})")
+        print(f"FEATURE ENGINEERING BY SPLIT ({mode.upper()})")
         print("=" * 80)
 
         all_features = []
@@ -52,7 +52,7 @@ class TdeDataset:
             )
 
             if data is None or len(data) == 0:
-                print("   ⚠️ Empty split – skipped")
+                print("Empty split – skipped")
                 continue
 
             # 2. Preprocess
@@ -62,7 +62,7 @@ class TdeDataset:
             objects = data['object_id'].unique()
             features_list = []
 
-            print(f"   ⏳ Extracting features for {len(objects)} objects...")
+            print(f"Extracting features for {len(objects)} objects...")
             for obj_id in tqdm(objects, desc=f"Processing {sp}", ncols=100, leave=True):
                 obj_data = data[data['object_id'] == obj_id]
                 feat = self.feature_engineer.extract_all_features(obj_data)
@@ -71,20 +71,20 @@ class TdeDataset:
                     features_list.append(feat)
 
             if not features_list:
-                print("   ⚠️ No features extracted – skipped")
+                print(" No features extracted skipped")
                 continue
 
             feat = pd.concat(features_list, ignore_index=True)
             feat["split"] = sp
             all_features.append(feat)
 
-            print(f"   ✅ Objects processed: {len(feat)}")
+            print(f"  Objects processed: {len(feat)}")
 
         if not all_features:
-            raise RuntimeError("❌ No features extracted from any split")
+            raise RuntimeError(" No features extracted from any split")
 
         features = pd.concat(all_features, ignore_index=True)
-        print(f"\n✅ TOTAL OBJECTS: {features['object_id'].nunique()}")
+        print(f"\nTOTAL OBJECTS: {features['object_id'].nunique()}")
 
         return features
 
@@ -93,7 +93,7 @@ class TdeDataset:
     # ======================================================
     def create_train_dataset(self, save=True):
         print("=" * 80)
-        print("🏗️  BUILD TRAIN DATASET (SPLIT-AWARE FINAL)")
+        print(" BUILD TRAIN DATASET (SPLIT-AWARE FINAL)")
         print("=" * 80)
 
         features = self._build_features_by_split(mode="train")
@@ -127,7 +127,7 @@ class TdeDataset:
         if save:
             TRAIN_FEATURES.parent.mkdir(parents=True, exist_ok=True)
             dataset.to_csv(TRAIN_FEATURES, index=False)
-            print(f"💾 Saved train dataset → {TRAIN_FEATURES}")
+            print(f"Saved train dataset → {TRAIN_FEATURES}")
 
         return dataset
 
@@ -136,7 +136,7 @@ class TdeDataset:
     # ======================================================
     def create_test_dataset(self, save=True):
         print("=" * 80)
-        print("🧪 BUILD TEST DATASET (SPLIT-AWARE FINAL)")
+        print(" BUILD TEST DATASET (SPLIT-AWARE FINAL)")
         print("=" * 80)
 
         features = self._build_features_by_split(mode="test")
@@ -171,7 +171,7 @@ class TdeDataset:
         if save:
             TEST_FEATURES.parent.mkdir(parents=True, exist_ok=True)
             dataset.to_csv(TEST_FEATURES, index=False)
-            print(f"💾 Saved test dataset → {TEST_FEATURES}")
+            print(f"Saved test dataset → {TEST_FEATURES}")
 
         return dataset
 
@@ -200,7 +200,7 @@ class TdeDataset:
     def _align_with_train(self, test_df):
         if not TRAIN_FEATURES.exists():
             raise RuntimeError(
-                "❌ train_features.csv not found. "
+                " train_features.csv not found. "
                 "Run create_train_dataset() first."
             )
 
@@ -215,7 +215,7 @@ class TdeDataset:
         return test_df
 
     def _print_stats(self, df, is_test=False):
-        print("\n📊 DATASET STATS")
+        print("\n DATASET STATS")
         print(f"Shape   : {df.shape}")
         print(f"Objects : {df['object_id'].nunique()}")
 

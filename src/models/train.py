@@ -19,16 +19,16 @@ from model import (
 
 def main():
     print("=" * 80)
-    print("🚀 TDE MALLORN – ULTIMATE F1 OPTIMIZATION TRAINING")
+    print(" TDE MALLORN – ULTIMATE F1 OPTIMIZATION TRAINING")
     print("=" * 80)
 
     # -------------------------------------------------
     # LOAD DATA
     # -------------------------------------------------
     if not TRAIN_FEATURES.exists():
-        raise FileNotFoundError(f"❌ File not found: {TRAIN_FEATURES}")
+        raise FileNotFoundError(f" File not found: {TRAIN_FEATURES}")
 
-    print("📥 Loading train features...")
+    print(" Loading train features...")
     df = pd.read_csv(TRAIN_FEATURES)
     
     # -------------------------------------------------
@@ -38,9 +38,9 @@ def main():
     df["target"] = df["target"].fillna(0).astype(int)
     y = df["target"]
     
-    print(f"📊 Total samples : {len(df)}")
-    print(f"🎯 TDE count     : {y.sum()}")
-    print(f"🎯 TDE ratio     : {y.mean():.4f}")
+    print(f" Total samples : {len(df)}")
+    print(f" TDE count     : {y.sum()}")
+    print(f" TDE ratio     : {y.mean():.4f}")
     
     # -------------------------------------------------
     # FEATURE SELECTION STRATEGY
@@ -56,16 +56,16 @@ def main():
     # 2. Handle categorical columns
     cat_cols = X_full.select_dtypes(include=["object", "category"]).columns
     if len(cat_cols) > 0:
-        print(f"🔄 Converting categorical: {cat_cols.tolist()}")
+        print(f" Converting categorical: {cat_cols.tolist()}")
         for col in cat_cols:
             X_full[col] = pd.factorize(X_full[col])[0]
     
     # 3. Handle NaN
     if X_full.isnull().any().any():
-        print("⚠️ NaNs detected – filling with column median")
+        print(" NaNs detected – filling with column median")
         X_full = X_full.fillna(X_full.median())
     
-    print(f"🧠 Initial features : {X_full.shape[1]}")
+    print(f" Initial features : {X_full.shape[1]}")
     
     # -------------------------------------------------
     # STRATEGY 1: TRAIN WITH ALL FEATURES
@@ -128,7 +128,7 @@ def main():
     # COMPARE STRATEGIES
     # -------------------------------------------------
     print("\n" + "="*80)
-    print("📊 STRATEGY COMPARISON")
+    print(" STRATEGY COMPARISON")
     print("="*80)
     
     strategies = {
@@ -151,7 +151,7 @@ def main():
             best_strategy = name
             best_result = result
     
-    print(f"\n🏆 BEST STRATEGY: {best_strategy} (F1: {best_f1:.4f})")
+    print(f"\n BEST STRATEGY: {best_strategy} (F1: {best_f1:.4f})")
     
     # -------------------------------------------------
     # SAVE BEST MODEL
@@ -183,13 +183,13 @@ def main():
         model_path,
     )
     
-    print(f"\n💾 Best model saved → {model_path}")
+    print(f"\n Best model saved → {model_path}")
     
     # -------------------------------------------------
     # FEATURE IMPORTANCE ANALYSIS
     # -------------------------------------------------
     print("\n" + "="*80)
-    print("📈 FEATURE IMPORTANCE ANALYSIS")
+    print(" FEATURE IMPORTANCE ANALYSIS")
     print("="*80)
     
     if "feature_importance" in result_all and result_all["feature_importance"] is not None:
@@ -198,17 +198,17 @@ def main():
         # Save importance
         importance_path = MODELS_DIR / f"feature_importance_{ts}.csv"
         importance_df.to_csv(importance_path, index=False)
-        print(f"💾 Feature importance saved → {importance_path}")
+        print(f" Feature importance saved → {importance_path}")
         
         # Show most important features
-        print("\n🔝 Top 20 Most Important Features:")
+        print("\n Top 20 Most Important Features:")
         top_features = importance_df.nlargest(20, 'importance_mean')
         for idx, row in top_features.iterrows():
             importance_bar = "█" * int(row['importance_mean'] / top_features['importance_mean'].max() * 50)
             print(f"  {row['feature']:30s} |{importance_bar:<50}| {row['importance_mean']:.1f}")
     
     print("\n" + "="*80)
-    print(f"✅ TRAINING COMPLETED - BEST F1: {best_f1:.4f}")
+    print(f" TRAINING COMPLETED - BEST F1: {best_f1:.4f}")
     print("="*80)
     
     return best_result

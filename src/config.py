@@ -6,30 +6,30 @@ from pathlib import Path
 import os
 
 # =====================================================
-# 1️⃣ PROJECT ROOT (CODE)
+# 1️ PROJECT ROOT (CODE)
 # =====================================================
 PROJECT_ROOT = Path(__file__).resolve().parent
 
 # =====================================================
-# 2️⃣ DATA ROOT (CÓ THỂ NẰM NGOÀI PROJECT)
-# 👉 CHỈ CẦN SỬA DÒNG NÀY
+# 2️ DATA ROOT (CÓ THỂ NẰM NGOÀI PROJECT)
+#  CHỈ CẦN SỬA DÒNG NÀY
 # =====================================================
 DATA_ROOT = Path(
     os.environ.get(
         "TDE_DATA_ROOT",          # cho phép set bằng biến môi trường
-        "/content/data"           # 👈 DÁN ĐƯỜNG DẪN DATA Ở ĐÂY
+        "/content/data"           #  ĐƯỜNG DẪN DATA 
     )
 )
 
 # =====================================================
-# 3️⃣ DATA DIRECTORIES
+# 3️ DATA DIRECTORIES
 # =====================================================
 RAW_DATA_DIR = DATA_ROOT 
 PROCESSED_DATA_DIR = DATA_ROOT / "processed"
 CACHE_DIR = DATA_ROOT / "cache"
 
 # =====================================================
-# 4️⃣ OUTPUT (LUÔN Ở PROJECT)
+# 4️ OUTPUT (LUÔN Ở PROJECT)
 # =====================================================
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 MODELS_DIR = OUTPUTS_DIR / "models"
@@ -37,7 +37,7 @@ SUBMISSIONS_DIR = OUTPUTS_DIR / "submissions"
 LOGS_DIR = OUTPUTS_DIR / "logs"
 
 # =====================================================
-# 5️⃣ CREATE DIRS
+# 5️ CREATE DIRS
 # =====================================================
 for d in [
     RAW_DATA_DIR,
@@ -50,7 +50,7 @@ for d in [
     d.mkdir(parents=True, exist_ok=True)
 
 # =====================================================
-# 6️⃣ FILE PATHS
+# 6️ FILE PATHS
 # =====================================================
 # Raw data files
 TRAIN_LOG = RAW_DATA_DIR / "train_log.csv"
@@ -65,7 +65,7 @@ SUBMISSION_FILE = SUBMISSIONS_DIR / "submission.csv"
 MODEL_FILE = MODELS_DIR / "best_model.pkl"
 
 # =====================================================
-# 7️⃣ PHYSICAL CONSTANTS
+# 7️ PHYSICAL CONSTANTS
 # =====================================================
 EFF_WAVELENGTHS = {
     'u': 3641,
@@ -81,14 +81,14 @@ FILTERS = ['u', 'g', 'r', 'i', 'z', 'y']
 NUM_SPLITS = 20
 
 # =====================================================
-# 8️⃣ MODEL CONFIG
+# 8️ MODEL CONFIG
 # =====================================================
 SEED = 42
 CV_FOLDS = 5
 EARLY_STOPPING_ROUNDS = 50
 
 # =====================================================
-# 9️⃣ FEATURE CONFIG
+# 9️ FEATURE CONFIG
 # =====================================================
 # Các features để loại bỏ khỏi training
 DROP_COLS = [
@@ -103,9 +103,9 @@ DROP_COLS = [
 ]
 
 # =====================================================
-# 🔟 LOG
+#  LOG
 # =====================================================
-print("✅ TDE Mallorn config loaded")
-print(f"📁 PROJECT_ROOT : {PROJECT_ROOT}")
-print(f"📁 DATA_ROOT    : {DATA_ROOT}")
-print(f"📁 OUTPUTS_DIR  : {OUTPUTS_DIR}")
+print(" TDE Mallorn config loaded")
+print(f" PROJECT_ROOT : {PROJECT_ROOT}")
+print(f" DATA_ROOT    : {DATA_ROOT}")
+print(f" OUTPUTS_DIR  : {OUTPUTS_DIR}")

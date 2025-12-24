@@ -34,10 +34,10 @@ class RobustPreprocessor:
         df = df.copy()
         
         if 'flux_corrected' in df.columns:
-            print("⚠️  flux_corrected đã tồn tại, bỏ qua")
+            print(" flux_corrected đã tồn tại, bỏ qua")
             return df
         
-        print("🌌 Đang hiệu chỉnh extinction...")
+        print(" Đang hiệu chỉnh extinction...")
         
         # Xác định column names
         flux_col = self._get_column_name(df, ['flux', 'Flux', 'FLUX'])
@@ -64,7 +64,7 @@ class RobustPreprocessor:
                 flux_corrected_list.append(flux_corr)
             except Exception as e:
                 # Nếu có lỗi, dùng flux gốc
-                print(f"⚠️  Lỗi extinction correction: {e}, dùng flux gốc")
+                print(f"  Lỗi extinction correction: {e}, dùng flux gốc")
                 flux_corrected_list.append(row[flux_col])
         
         df['flux_corrected'] = flux_corrected_list
@@ -72,7 +72,7 @@ class RobustPreprocessor:
         # Xử lý flux quá nhỏ/âm
         df['flux_positive'] = df['flux_corrected'].clip(lower=1e-9)
         
-        print(f"✅ Đã hiệu chỉnh extinction cho {len(df)} observations")
+        print(f" Đã hiệu chỉnh extinction cho {len(df)} observations")
         return df
     
     def calculate_absolute_magnitude(self, df):
@@ -82,10 +82,10 @@ class RobustPreprocessor:
         df = df.copy()
         
         if 'absolute_mag' in df.columns:
-            print("⚠️  absolute_mag đã tồn tại, bỏ qua")
+            print("  absolute_mag đã tồn tại, bỏ qua")
             return df
         
-        print("🌠 Đang tính độ sáng tuyệt đối...")
+        print(" Đang tính độ sáng tuyệt đối...")
         
         # Kiểm tra required columns
         required_cols = ['flux_positive', 'Z', 'object_id']
@@ -113,7 +113,7 @@ class RobustPreprocessor:
             df['snr'] = df['flux_corrected'] / (df[flux_err_col] + 1e-9)
             
         except Exception as e:
-            print(f"⚠️  Lỗi tính absolute magnitude: {e}")
+            print(f"  Lỗi tính absolute magnitude: {e}")
             # Set default values
             df['distance_pc'] = 1e6
             df['apparent_mag'] = 0
@@ -124,7 +124,7 @@ class RobustPreprocessor:
         if 'Z_clean' in df.columns:
             df = df.drop(columns=['Z_clean'])
         
-        print(f"✅ Đã tính absolute magnitude cho {len(df)} observations")
+        print(f" Đã tính absolute magnitude cho {len(df)} observations")
         return df
     
     def clean_data(self, df):
@@ -133,7 +133,7 @@ class RobustPreprocessor:
         """
         df = df.copy()
         
-        print("🧹 Đang làm sạch dữ liệu...")
+        print(" Đang làm sạch dữ liệu...")
         
         # 1. Sắp xếp theo object_id và thời gian
         sort_cols = []
@@ -148,7 +148,7 @@ class RobustPreprocessor:
         # 2. Kiểm tra và xử lý missing values
         missing_cols = df.columns[df.isnull().any()].tolist()
         if missing_cols:
-            print(f"⚠️  Có missing values trong: {missing_cols[:5]}...")  # Hiển thị 5 cột đầu
+            print(f" Có missing values trong: {missing_cols[:5]}...")  # Hiển thị 5 cột đầu
             
             # Fill missing EBV với 0 (không extinction)
             if 'EBV' in df.columns:
@@ -169,10 +169,10 @@ class RobustPreprocessor:
         if flux_err_col in df.columns:
             zero_err_mask = df[flux_err_col] == 0
             if zero_err_mask.any():
-                print(f"⚠️  Loại bỏ {zero_err_mask.sum()} observations có flux_err = 0")
+                print(f"  Loại bỏ {zero_err_mask.sum()} observations có flux_err = 0")
                 df = df[~zero_err_mask].copy()
         
-        print(f"✅ Đã làm sạch: {len(df)} observations")
+        print(f" Đã làm sạch: {len(df)} observations")
         return df
     
     def add_basic_stats(self, df):
@@ -181,7 +181,7 @@ class RobustPreprocessor:
         
         # Kiểm tra required columns
         if 'object_id' not in df.columns:
-            print("⚠️  Không có object_id, bỏ qua basic stats")
+            print(" Không có object_id, bỏ qua basic stats")
             return df
         
         try:
@@ -203,7 +203,7 @@ class RobustPreprocessor:
                 df['mjd_span'] = df['object_id'].map(time_spans)
             
         except Exception as e:
-            print(f"⚠️  Lỗi tính basic stats: {e}")
+            print(f"  Lỗi tính basic stats: {e}")
         
         return df
     
@@ -212,7 +212,7 @@ class RobustPreprocessor:
         Pipeline xử lý đầy đủ - ROBUST VERSION
         """
         print("="*60)
-        print("🚀 BẮT ĐẦU PREPROCESSING PIPELINE")
+        print(" BẮT ĐẦU PREPROCESSING PIPELINE")
         print("="*60)
         
         # Lưu số observations ban đầu
@@ -232,7 +232,7 @@ class RobustPreprocessor:
             # 4. Thêm thông tin thống kê cơ bản
             df = self.add_basic_stats(df)
             
-            print(f"\n📊 KẾT QUẢ PREPROCESSING:")
+            print(f"\n KẾT QUẢ PREPROCESSING:")
             print(f"   Số observations: {initial_count} → {len(df)}")
             print(f"   Số object_id duy nhất: {df['object_id'].nunique()}")
             
@@ -247,8 +247,8 @@ class RobustPreprocessor:
             return df
             
         except Exception as e:
-            print(f"❌ Lỗi trong preprocessing pipeline: {e}")
-            print("⚠️  Trả về dataframe gốc với minimal processing")
+            print(f" Lỗi trong preprocessing pipeline: {e}")
+            print("  Trả về dataframe gốc với minimal processing")
             
             # Minimal preprocessing
             df = df.copy()
@@ -263,4 +263,4 @@ class Preprocessor(RobustPreprocessor):
     """Legacy class - extends RobustPreprocessor"""
     def __init__(self):
         super().__init__()
-        print("⚠️  Using legacy Preprocessor. Consider using RobustPreprocessor.")
+        print("  Using legacy Preprocessor. Consider using RobustPreprocessor.")

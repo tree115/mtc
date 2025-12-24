@@ -95,7 +95,7 @@ def train_lgbm_cv_improved(
     n_neg = len(y) - n_pos
     imbalance_ratio = n_neg / n_pos
     
-    print(f"📊 Class balance: {n_pos} TDE vs {n_neg} Non-TDE (ratio: {imbalance_ratio:.1f}x)")
+    print(f" Class balance: {n_pos} TDE vs {n_neg} Non-TDE (ratio: {imbalance_ratio:.1f}x)")
     
     skf = StratifiedKFold(
         n_splits=n_splits,
@@ -134,7 +134,7 @@ def train_lgbm_cv_improved(
     feature_importance_df['feature'] = X.columns.tolist()
     
     for fold, (tr_idx, val_idx) in enumerate(skf.split(X, y), 1):
-        print(f"\n🔁 Fold {fold}/{n_splits}")
+        print(f"\n Fold {fold}/{n_splits}")
         
         X_tr, X_val = X.iloc[tr_idx], X.iloc[val_idx]
         y_tr, y_val = y.iloc[tr_idx], y.iloc[val_idx]
@@ -186,7 +186,7 @@ def train_lgbm_cv_improved(
     # POST-TRAINING ANALYSIS & THRESHOLD OPTIMIZATION
     # ============================================
     print("\n" + "="*60)
-    print("🎯 POST-TRAINING OPTIMIZATION")
+    print(" POST-TRAINING OPTIMIZATION")
     print("="*60)
     
     # Method 1: Optimal threshold từ OOF
@@ -210,7 +210,7 @@ def train_lgbm_cv_improved(
             best_overall_f1 = f1
             best_overall_threshold = t
     
-    print(f"\n📊 Threshold Analysis:")
+    print(f"\n Threshold Analysis:")
     print(f"   Method 1 (Optimal): {f1_opt:.4f} @ {threshold_opt:.3f}")
     print(f"   Method 2 (PR Curve): {f1_pr:.4f} @ {threshold_pr:.3f}")
     print(f"   Selected: {best_overall_f1:.4f} @ {best_overall_threshold:.3f}")
@@ -231,7 +231,7 @@ def train_lgbm_cv_improved(
         importance_path = 'outputs/feature_importance.csv'
         feature_importance_df.to_csv(importance_path, index=False)
         
-        print(f"\n📈 Top 20 Features:")
+        print(f"\n Top 20 Features:")
         for i, row in feature_importance_df.head(20).iterrows():
             print(f"   {row['feature']}: {row['importance_mean']:.2f} ± {row['importance_std']:.2f}")
     
@@ -268,7 +268,7 @@ def train_lgbm_ensemble(
     seeds = [42, 123, 456, 789, 999]  # Different seeds
     
     for i, seed in enumerate(seeds[:n_models]):
-        print(f"\n🌲 Training Ensemble Model {i+1}/{n_models} (seed={seed})")
+        print(f"\n Training Ensemble Model {i+1}/{n_models} (seed={seed})")
         
         result = train_lgbm_cv_improved(
             X=X,
@@ -288,7 +288,7 @@ def train_lgbm_ensemble(
     # Find optimal threshold trên ensemble predictions
     best_threshold, best_f1 = find_optimal_threshold(y, oof_pred_ensemble)
     
-    print(f"\n🎯 Ensemble Results:")
+    print(f"\n Ensemble Results:")
     print(f"   OOF AUC: {roc_auc_score(y, oof_pred_ensemble):.4f}")
     print(f"   OOF F1: {best_f1:.4f} @ threshold={best_threshold:.3f}")
     
@@ -345,7 +345,7 @@ def select_features_by_importance(X, y, top_k=100, random_state=42):
     """
     Chọn top features dựa trên feature importance
     """
-    print(f"\n🔍 Selecting top {top_k} features...")
+    print(f"\n Selecting top {top_k} features...")
     
     # Train quick model để lấy importance
     model = LGBMClassifier(
@@ -368,7 +368,7 @@ def select_features_by_importance(X, y, top_k=100, random_state=42):
     # Select top features
     selected_features = importance.head(top_k)['feature'].tolist()
     
-    print(f"✅ Selected {len(selected_features)} features")
+    print(f" Selected {len(selected_features)} features")
     print(f"   Top 10: {selected_features[:10]}")
     
     return selected_features, importance
