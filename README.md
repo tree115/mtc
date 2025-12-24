@@ -13,7 +13,7 @@ Nhóm triển khai đầy đủ các bước:
 - Tạo báo cáo OOF và trực quan hóa các kết quả (feature importance, confusion matrix, ROC/PR curves).
 ---
 
-## 👥 Nhóm thực hiện
+## Nhóm thực hiện
 
 | Họ và tên | Mã sinh viên |
 |-----------|--------------|
@@ -72,7 +72,7 @@ TDE-Mallorn-Detection/
 │   ├── run.ipynb                     # Chạy toàn bộ pipeline
 │   ├── eda.ipynb                     # Khám phá và phân tích dữ liệu
 │
-├── outputs/                          # Kết quả sinh ra (không commit)
+├── outputs/                          # Kết quả sinh ra
 │   ├── models/                       # Model đã train
 │   ├── submissions/                  # File nộp Kaggle
 │   ├── logs/                         # Log huấn luyện
@@ -80,6 +80,54 @@ TDE-Mallorn-Detection/
 │   └── optuna_studies/               # Kết quả Optuna
 
 ```
+
+---
+
+## Cài đặt
+
+Cách 1 : Chạy local
+
+Pipeline có thể chạy **trên Local hoặc Google Colab**.
+
+---
+
+### Cách 1: Local
+
+**Bước 1:** Clone repo về máy
+```bash
+git clone https://github.com/tree115/mtc.git
+cd TDE-Mallorn-Detection
+```
+
+**Bước 2:** Chạy pipeline
+- Trích xuất đặc trưng:
+```bash
+python src/features/feature_engineer.py
+python src/features/gp_features.py
+```
+- Huấn luyện model:
+```bash
+python src/models/train.py      # Train cơ bản
+python src/models/train_final.py # Train với Optuna tuning
+```
+- Dự đoán & tạo file submission:
+```bash
+python src/models/predict.py
+```
+
+
+### Cách 2: Google Colab
+
+**Bước 1:** Clone repo vào Colab
+```bash
+!git clone https://github.com/<username>/TDE-Mallorn-Detection.git
+%cd TDE-Mallorn-Detection
+!pip install -r requirements.txt
+```
+
+**Bước 2:** Chạy Notebook
+- Mở và chạy notebooks/run.ipynb để thực hiện toàn bộ pipeline: feature → train → predict.
+
 ---
 
 ## Tính năng
