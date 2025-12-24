@@ -70,6 +70,7 @@ TDE-Mallorn-Detection/
 │
 ├── notebooks/                        # Notebook phân tích
 │   ├── run.ipynb                     # Chạy toàn bộ pipeline
+│   ├── eda.ipynb                     # Khám phá và phân tích dữ liệu
 │
 ├── outputs/                          # Kết quả sinh ra (không commit)
 │   ├── models/                       # Model đã train
